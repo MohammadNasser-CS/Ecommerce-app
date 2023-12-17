@@ -1,6 +1,9 @@
+import 'package:e_commerce/controllers/product_details_cubit/product_details_cubit.dart';
 import 'package:e_commerce/models/product_item_modle.dart';
+import 'package:e_commerce/views/widgets/counter_widget.dart';
 import 'package:e_commerce/views/widgets/product_size_options.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductDetailsDialog extends StatefulWidget {
   final ProductItemModel productItemModel;
@@ -12,27 +15,11 @@ class ProductDetailsDialog extends StatefulWidget {
 
 class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
   late ProductItemModel tempProductItem;
-  int _quantity = 1;
-  void _increaseQuantity() {
-    setState(() {
-      _quantity++;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    tempProductItem = widget.productItemModel;
+    tempProductItem=widget.productItemModel;
   }
-
-  void _decreaseQuantity() {
-    setState(() {
-      if (_quantity > 1) {
-        _quantity--;
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -63,51 +50,31 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
                       ),
                 ),
                 const Spacer(),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: _quantity > 1
-                            ? () {
-                                setState(
-                                  () {
-                                    _decreaseQuantity();
-                                  },
-                                );
-                              }
-                            : null,
-                        icon: const Icon(
-                          Icons.remove,
-                          size: 24.0,
-                        ),
-                      ),
-                      Text(
-                        _quantity.toString(),
-                        style: const TextStyle(
-                          fontSize: 24.0,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          setState(
-                            () {
-                              _increaseQuantity();
-                            },
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.add,
-                          size: 24.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
+                BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+                  buildWhen: (previous, current) =>
+                      (current is QuantityCounterLoaded &&
+                          current.itemId == tempProductItem.id) ||
+                      current is ProductDetailsLoaded,
+                  bloc: BlocProvider.of<ProductDetailsCubit>(context),
+                  builder: (context, state) {
+                    if (state is QuantityCounterLoaded) {
+                      return CounterWidget(
+                        cubit: BlocProvider.of<ProductDetailsCubit>(context),
+                        value: state.value,
+                        item: tempProductItem,
+                      );
+                    } else if (state is ProductDetailsLoaded) {
+                      return CounterWidget(
+                        cubit: BlocProvider.of<ProductDetailsCubit>(context),
+                        value: state.productItems
+                            .firstWhere((item) => item.id == tempProductItem.id)
+                            .quantity,
+                        item: tempProductItem,
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
                 ),
               ],
             ),
@@ -153,13 +120,33 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
               children: [
                 Expanded(
                   flex: 2,
-                  child: Text(
-                    '\$${(tempProductItem.price * _quantity).toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      fontSize: 24.0,
-                      color: Colors.deepOrange,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+                    builder: (context, state) {
+                      if (state is QuantityCounterLoaded) {
+                        return Text(
+                          '\$${(tempProductItem.price * state.value).toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 24.0,
+                            color: Colors.deepOrange,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      } else if (state is ProductDetailsLoaded) {
+                        final int value = state.productItems
+                            .firstWhere((item) => item.id == tempProductItem.id)
+                            .quantity;
+                        return Text(
+                          '\$${(tempProductItem.price * value).toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 24.0,
+                            color: Colors.deepOrange,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    },
                   ),
                 ),
                 Expanded(

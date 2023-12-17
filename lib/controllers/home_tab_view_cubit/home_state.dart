@@ -13,9 +13,17 @@ final class HomeLoaded extends HomeState {
     required this.carouselItems,
   });
 }
+
 final class HomeError extends HomeState {
   final String message;
   const HomeError({
     required this.message,
+  });
+}
+
+final class HomePageFavroiteChangeLoaded extends HomeState {
+  final List<ProductItemModel> products;
+   const HomePageFavroiteChangeLoaded({
+    required this.products
   });
 }
