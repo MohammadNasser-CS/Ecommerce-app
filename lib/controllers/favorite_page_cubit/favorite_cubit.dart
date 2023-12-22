@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:e_commerce/controllers/home_tab_view_cubit/home_cubit.dart';
 import 'package:e_commerce/models/product_item_modle.dart';
 import 'package:meta/meta.dart';
 
