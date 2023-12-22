@@ -1,8 +1,6 @@
 import 'package:e_commerce/Utils/app_routes.dart';
 import 'package:e_commerce/controllers/cart_page_cubit/cart_cubit.dart';
 import 'package:e_commerce/controllers/favorite_page_cubit/favorite_cubit.dart';
-import 'package:e_commerce/controllers/home_tab_view_cubit/home_cubit.dart';
-import 'package:e_commerce/controllers/set_favorite_cubit/set_favorite_cubit.dart';
 import 'package:e_commerce/views/pages/cart_page.dart';
 import 'package:e_commerce/views/pages/favorite_page.dart';
 import 'package:e_commerce/views/pages/home_page.dart';
@@ -49,18 +47,12 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
         },
         child: const CartPage(),
       ),
-      MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context)=>HomeCubit()),
-          BlocProvider(
-            create: (context) {
-              final cubit = FavoriteCubit();
-              cubit.getFavoriteData();
-              return cubit;
-            },
-          ),
-          
-        ],
+      BlocProvider(
+        create: (context) {
+          final cubit = FavoriteCubit();
+          cubit.getFavoriteData();
+          return cubit;
+        },
         child: const FavoritePage(),
       ),
       const ProfilePage(),
@@ -184,6 +176,10 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
         ),
         navBarStyle:
             NavBarStyle.style6, // Choose the nav bar style with this property.
+        onItemSelected: (value) => setState(() {
+          _controller.index = value;
+        }),
+        stateManagement: false,
       ),
     );
   }

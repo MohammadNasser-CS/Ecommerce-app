@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/Utils/app_routes.dart';
-import 'package:e_commerce/controllers/favorite_page_cubit/favorite_cubit.dart';
 import 'package:e_commerce/controllers/home_tab_view_cubit/home_cubit.dart';
 import 'package:e_commerce/views/widgets/product_item.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +12,11 @@ class HomeTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubitBase= BlocProvider.of<HomeCubit>(context);
-    final cubitSecond= BlocProvider.of<FavoriteCubit>(context);
     return BlocBuilder<HomeCubit, HomeState>(
       bloc: cubitBase,
+      
       buildWhen: (previous, current) =>
-          current is! HomePageFavroiteChangeLoaded,
+          current is HomeLoaded,
       builder: (context, state) {
         if (state is HomeLoading) {
           return const Center(
@@ -105,7 +104,6 @@ class HomeTabView extends StatelessWidget {
                           },
                           child: ProductItem(
                             cubit: cubitBase,
-                            secondaryCubit:cubitSecond,
                             productItemModel: state.products[index],
                           ),
                         ),
@@ -132,7 +130,6 @@ class HomeTabView extends StatelessWidget {
                           },
                           child: ProductItem(
                             cubit: cubitBase,
-                            secondaryCubit:cubitSecond,
                             productItemModel: state.products[index],
                           ),
                         ),

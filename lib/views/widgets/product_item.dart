@@ -1,19 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/Utils/app_color.dart';
-import 'package:e_commerce/controllers/home_tab_view_cubit/home_cubit.dart';
 import 'package:e_commerce/models/product_item_modle.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductItem extends StatelessWidget {
   final ProductItemModel productItemModel;
   final dynamic cubit;
-  final dynamic secondaryCubit;
   const ProductItem({
     super.key,
     required this.productItemModel,
     required this.cubit,
-    required this.secondaryCubit,
   });
 
   @override
@@ -50,8 +46,8 @@ class ProductItem extends StatelessWidget {
                 ),
                 child: IconButton(
                   onPressed: () {
-                    cubit.setFavorite(productItemModel.id);
-                    secondaryCubit.updateDataFromOtherCubit(productItemModel.id);
+                    cubit.changeFavorite(productItemModel.id);
+                    
                   },
                   icon: Icon(
                     productItemModel.isFavorite

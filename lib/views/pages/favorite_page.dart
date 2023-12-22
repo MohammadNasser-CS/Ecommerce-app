@@ -1,22 +1,19 @@
 import 'package:e_commerce/Utils/app_routes.dart';
 import 'package:e_commerce/controllers/favorite_page_cubit/favorite_cubit.dart';
-import 'package:e_commerce/controllers/home_tab_view_cubit/home_cubit.dart';
-import 'package:e_commerce/controllers/set_favorite_cubit/set_favorite_cubit.dart';
 import 'package:e_commerce/models/favorite_serach_category_model.dart';
-import 'package:e_commerce/models/product_item_modle.dart';
 import 'package:e_commerce/views/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FavoritePage extends StatelessWidget {
   const FavoritePage({super.key});
-
   @override
   Widget build(BuildContext context) {
     final cubitBase = BlocProvider.of<FavoriteCubit>(context);
-    final cubitSecond = BlocProvider.of<HomeCubit>(context);
     return BlocBuilder<FavoriteCubit, FavoriteState>(
-      buildWhen: (previous, current) => current is! FavroiteChangeLoaded,
+      buildWhen: (previous, current) {
+        return current is FavoriteLoaded;
+      },
       bloc: cubitBase,
       builder: (context, state) {
         if (state is FavoriteLoading) {
@@ -116,7 +113,6 @@ class FavoritePage extends StatelessWidget {
                               },
                               child: ProductItem(
                                 cubit: cubitBase,
-                                secondaryCubit: cubitSecond,
                                 productItemModel: state.products[index],
                               ),
                             ),
@@ -144,7 +140,6 @@ class FavoritePage extends StatelessWidget {
                                     },
                                     child: ProductItem(
                                       cubit: cubitBase,
-                                      secondaryCubit: cubitSecond,
                                       productItemModel:
                                           state.productItems[index],
                                     ),

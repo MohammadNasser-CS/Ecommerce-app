@@ -1,8 +1,6 @@
 import 'package:e_commerce/Utils/app_color.dart';
 import 'package:e_commerce/controllers/category_tab_view/category_cubit.dart';
-import 'package:e_commerce/controllers/favorite_page_cubit/favorite_cubit.dart';
 import 'package:e_commerce/controllers/home_tab_view_cubit/home_cubit.dart';
-import 'package:e_commerce/controllers/set_favorite_cubit/set_favorite_cubit.dart';
 import 'package:e_commerce/views/widgets/category_tab_view.dart';
 import 'package:e_commerce/views/widgets/home_tab_view.dart';
 import 'package:flutter/material.dart';
@@ -46,9 +44,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: TabBarView(
               controller: _tabController,
               children: [
-                MultiBlocProvider(
-                  providers: [
-                    BlocProvider(create: (context) => FavoriteCubit()),
                     BlocProvider(
                       create: (context) {
                         final homeCubit =
@@ -56,8 +51,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         homeCubit.getHomeData();
                         return homeCubit;
                       },
-                    ),
-                  ],
                   child: const HomeTabView(),
                 ),
                 BlocProvider(
