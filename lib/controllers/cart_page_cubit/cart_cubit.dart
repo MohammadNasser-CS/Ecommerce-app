@@ -8,8 +8,10 @@ class CartCubit extends Cubit<CartState> {
   CartCubit() : super(CartInitial());
   void getCartItems() {
     emit(CartLoading());
-    Future.delayed(const Duration(seconds: 3), () {
-      emit(CartLoaded(myOrderItems: dummyorders));
+
+    final double subTotal = dummyorders.fold(0, (sum, item) => sum+(item.price*item.quantity));
+    Future.delayed(const Duration(seconds: 1), () {
+      emit(CartLoaded(myOrderItems: dummyorders,subTotal: subTotal));
     });
   }
 

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/Utils/app_routes.dart';
 import 'package:e_commerce/controllers/home_tab_view_cubit/home_cubit.dart';
+import 'package:e_commerce/controllers/product_details_cubit/product_details_cubit.dart';
 import 'package:e_commerce/views/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
@@ -11,12 +12,12 @@ class HomeTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubitBase= BlocProvider.of<HomeCubit>(context);
+    final cubitBase = BlocProvider.of<HomeCubit>(context);
     return BlocBuilder<HomeCubit, HomeState>(
       bloc: cubitBase,
-      
-      buildWhen: (previous, current) =>
-          current is HomeLoaded,
+      buildWhen: (previous, current) {
+        return current is! ProductDetailsLoaded;
+      },
       builder: (context, state) {
         if (state is HomeLoading) {
           return const Center(
@@ -77,7 +78,7 @@ class HomeTabView extends StatelessWidget {
                   ],
                 ),
                 BlocBuilder<HomeCubit, HomeState>(
-                  bloc:cubitBase,
+                  bloc: cubitBase,
                   buildWhen: (previous, current) =>
                       current is HomePageFavroiteChangeLoaded ||
                       current is HomeLoaded,
@@ -95,12 +96,13 @@ class HomeTabView extends StatelessWidget {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) => InkWell(
-                          onTap: () {
+                          onTap: () async {
                             Navigator.of(context, rootNavigator: true)
                                 .pushNamed(
                               AppRoutes.details,
                               arguments: state.products[index],
-                            );
+                            ).then((value) => cubitBase.getHomeData());
+                            
                           },
                           child: ProductItem(
                             cubit: cubitBase,
@@ -121,12 +123,13 @@ class HomeTabView extends StatelessWidget {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) => InkWell(
-                          onTap: () {
+                          onTap: ()  async {
                             Navigator.of(context, rootNavigator: true)
                                 .pushNamed(
                               AppRoutes.details,
                               arguments: state.products[index],
-                            );
+                            ).then((value) => cubitBase.getHomeData());
+                            
                           },
                           child: ProductItem(
                             cubit: cubitBase,

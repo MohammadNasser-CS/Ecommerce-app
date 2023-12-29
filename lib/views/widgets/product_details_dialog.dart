@@ -1,9 +1,11 @@
+import 'package:e_commerce/Utils/app_routes.dart';
 import 'package:e_commerce/controllers/product_details_cubit/product_details_cubit.dart';
 import 'package:e_commerce/models/product_item_modle.dart';
 import 'package:e_commerce/views/widgets/counter_widget.dart';
 import 'package:e_commerce/views/widgets/product_size_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readmore/readmore.dart';
 
 class ProductDetailsDialog extends StatefulWidget {
   final ProductItemModel productItemModel;
@@ -18,11 +20,14 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
   @override
   void initState() {
     super.initState();
-    tempProductItem=widget.productItemModel;
+    tempProductItem = widget.productItemModel;
   }
+
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Container(
+      height: size.height * 0.45,
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -38,7 +43,7 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -66,9 +71,7 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
                     } else if (state is ProductDetailsLoaded) {
                       return CounterWidget(
                         cubit: BlocProvider.of<ProductDetailsCubit>(context),
-                        value: state.productItems
-                            .firstWhere((item) => item.id == tempProductItem.id)
-                            .quantity,
+                        value: state.productItem.quantity,
                         item: tempProductItem,
                       );
                     } else {
@@ -110,7 +113,19 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 8.0),
-                    Text(tempProductItem.description),
+                    ReadMoreText(
+                      colorClickableText: Theme.of(context).primaryColor,
+                      trimCollapsedText: 'Show more',
+                      trimExpandedText: 'Show less',
+                      trimLines: 3,
+                      trimMode: TrimMode.Line,
+                      tempProductItem.description,
+                      style: const TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -132,9 +147,7 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
                           ),
                         );
                       } else if (state is ProductDetailsLoaded) {
-                        final int value = state.productItems
-                            .firstWhere((item) => item.id == tempProductItem.id)
-                            .quantity;
+                        final int value = state.productItem.quantity;
                         return Text(
                           '\$${(tempProductItem.price * value).toStringAsFixed(2)}',
                           style: const TextStyle(
@@ -153,7 +166,9 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
                   flex: 2,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop(context);
+                      Navigator.of(context)
+                          .pushNamed(AppRoutes.ordersPage)
+                          .then((value) => Navigator.of(context).pop(context));
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.deepOrange,

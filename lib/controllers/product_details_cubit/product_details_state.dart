@@ -18,8 +18,8 @@ final class QuantityCounterLoaded extends ProductDetailsState {
 }
 
 final class ProductDetailsLoaded extends ProductDetailsState {
-  final List<ProductItemModel> productItems;
-  const ProductDetailsLoaded({required this.productItems});
+  final ProductItemModel productItem;
+  const ProductDetailsLoaded({required this.productItem});
 }
 
 final class ProductDetailsError extends ProductDetailsState {

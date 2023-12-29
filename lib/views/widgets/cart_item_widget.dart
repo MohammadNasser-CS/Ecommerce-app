@@ -87,7 +87,69 @@ class CartItemWidget extends StatelessWidget {
                 ),
               ],
             ),
-          )
+          ),
+          const SizedBox(height: 8.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    cartItem.name,
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  if (cartItem.size != null)
+                    Text.rich(
+                      TextSpan(
+                        text: 'Size: ',
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelMedium!
+                            .copyWith(color: AppColor.grey),
+                        children: [
+                          TextSpan(
+                            text: cartItem.size?.name,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+              BlocBuilder<CartCubit, CartState>(
+                buildWhen: (previous, current) =>
+                    (current is QuantityCounterLoaded &&
+                        current.itemId == cartItem.id) ||
+                    current is CartLoaded,
+                builder: (context, state) {
+                  if (state is QuantityCounterLoaded) {
+                    return Text(
+                      '\$${(cartItem.price * state.value).toStringAsFixed(2)}',
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                    );
+                  } else if (state is CartLoaded) {
+                    double price = cartItem.price;
+                    int quantity = state.myOrderItems
+                        .firstWhere(
+                          (item) => item.id == cartItem.id,
+                        )
+                        .quantity;
+                    return Text('\$${(price * quantity).toStringAsFixed(2)}',
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ));
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
+              )
+            ],
+          ),
         ],
       ),
     );

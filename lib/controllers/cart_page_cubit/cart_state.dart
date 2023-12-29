@@ -21,7 +21,8 @@ final class QuantityCounterLoaded extends CartState {
 
 final class CartLoaded extends CartState {
   final List<MyCartItemModel> myOrderItems;
-  const CartLoaded({required this.myOrderItems});
+  final double subTotal;
+  const CartLoaded({required this.myOrderItems,required this.subTotal});
 }
 
 final class CartError extends CartState {

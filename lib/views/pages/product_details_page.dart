@@ -1,26 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/Utils/app_color.dart';
 import 'package:e_commerce/controllers/product_details_cubit/product_details_cubit.dart';
-import 'package:e_commerce/models/product_item_modle.dart';
 import 'package:e_commerce/views/widgets/product_details_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductDetailsPage extends StatefulWidget {
-  final ProductItemModel productItemModel;
-  const ProductDetailsPage({super.key, required this.productItemModel});
+  const ProductDetailsPage({super.key});
 
   @override
   State<ProductDetailsPage> createState() => _ProductDetailsPageState();
 }
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
-  late ProductItemModel tempProductItem;
-  @override
-  void initState() {
-    super.initState();
-    tempProductItem = widget.productItemModel;
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -47,15 +40,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               actions: [
                 IconButton(
                   onPressed: () {
-                    // setState(() {
-                    //   int selectedItemIndex = products.indexOf(tempProductItem);
-                    //   products[selectedItemIndex] = tempProductItem.copyItem(
-                    //       isFav: !tempProductItem.isFavorite);
-                    //   tempProductItem = products[selectedItemIndex];
-                    // });
+                    cubit.changeFavorite(state.productItem.id);
                   },
                   icon: Icon(
-                    tempProductItem.isFavorite
+                    state.productItem.isFavorite
                         ? Icons.favorite
                         : Icons.favorite_border,
                     color: AppColor.red,
@@ -76,7 +64,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(24.0),
                         child: CachedNetworkImage(
-                          imageUrl: tempProductItem.imgUrl,
+                          imageUrl: state.productItem.imgUrl,
                           fit: BoxFit.contain,
                           placeholder: (context, url) => const Center(
                               child: CircularProgressIndicator.adaptive()),
@@ -106,7 +94,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                           BlocProvider.value(
                                         value: cubit,
                                         child: ProductDetailsDialog(
-                                            productItemModel: tempProductItem),
+                                            productItemModel: state.productItem),
                                       ),
                                     ),
                                   );
@@ -114,7 +102,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.deepOrange,
+                                backgroundColor: Theme.of(context).primaryColor,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
@@ -124,7 +112,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

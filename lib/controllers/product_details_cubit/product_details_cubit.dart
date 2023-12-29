@@ -6,10 +6,10 @@ part 'product_details_state.dart';
 
 class ProductDetailsCubit extends Cubit<ProductDetailsState> {
   ProductDetailsCubit() : super(ProductDetailsInitial());
-  void getProductDetails() {
+  void getProductDetails(ProductItemModel productItem) {
     emit(ProductDetailsLoading());
-    Future.delayed(const Duration(seconds: 3), () {
-      emit(ProductDetailsLoaded(productItems: dummyItems));
+    Future.delayed(const Duration(seconds: 1), () {
+      emit(ProductDetailsLoaded(productItem: productItem));
     });
   }
 
@@ -33,6 +33,17 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     emit(
       QuantityCounterLoaded(
           value: dummyItems[index].quantity, itemId: itemId),
+    );
+  }
+   
+   void changeFavorite(String itemId) {
+    final index = dummyItems.indexWhere((item) => item.id == itemId);
+    dummyItems[index] = dummyItems[index].copyWith(
+      isFavorite: !dummyItems[index].isFavorite,
+    );
+    emit(
+      ProductDetailsLoaded(
+          productItem:dummyItems[index]),
     );
   }
 }
