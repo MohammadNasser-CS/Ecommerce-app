@@ -4,6 +4,7 @@ import 'package:e_commerce/controllers/payment_cubit/payment_cubit.dart';
 import 'package:e_commerce/controllers/product_details_cubit/product_details_cubit.dart';
 import 'package:e_commerce/controllers/search_page_cubit/search_cubit.dart';
 import 'package:e_commerce/models/product_item_modle.dart';
+import 'package:e_commerce/views/pages/add_payment_method.dart';
 import 'package:e_commerce/views/pages/custom_bottom_navbar.dart';
 import 'package:e_commerce/views/pages/location_chooes_page.dart';
 import 'package:e_commerce/views/pages/my_orders_page.dart';
@@ -50,6 +51,11 @@ class AppRouter {
       case AppRoutes.ordersPage:
         return MaterialPageRoute(
           builder: (_) => const MyOrderPage(),
+          settings: settings,
+        );
+        case AppRoutes.addPaymentCard:
+        return MaterialPageRoute(
+          builder: (_) => const AddPaymentMethod(),
           settings: settings,
         );
       case AppRoutes.paymentPage:

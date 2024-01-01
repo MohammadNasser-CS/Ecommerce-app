@@ -111,7 +111,7 @@ class LocationChoosePage extends StatelessWidget {
                         onPressed: () {
                           final index = state.myAddressItems
                               .indexWhere((item) => item.isSelected == true);
-                          if (index != 1) {
+                          if (index != -1) {
                             Navigator.of(context)
                                 .pop(state.myAddressItems[index]);
                           } else {
