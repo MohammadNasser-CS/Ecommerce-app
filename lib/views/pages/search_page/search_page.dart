@@ -1,7 +1,7 @@
 import 'package:e_commerce/controllers/search_page_cubit/search_cubit.dart';
 import 'package:e_commerce/models/search_popular_model.dart';
-import 'package:e_commerce/views/widgets/search_app_bar.dart';
-import 'package:e_commerce/views/widgets/search_item.dart';
+import 'package:e_commerce/views/pages/search_page/widgets/search_app_bar.dart';
+import 'package:e_commerce/views/pages/search_page/widgets/search_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -3,11 +3,11 @@ import 'package:e_commerce/Utils/app_routes.dart';
 import 'package:e_commerce/controllers/payment_cubit/payment_cubit.dart';
 import 'package:e_commerce/models/address_choose_item_model.dart';
 import 'package:e_commerce/models/payment_method_mode.dart';
-import 'package:e_commerce/views/widgets/location_selected_widget.dart';
-import 'package:e_commerce/views/widgets/payment_item_widget.dart';
-import 'package:e_commerce/views/widgets/payment_method_dialog.dart';
-import 'package:e_commerce/views/widgets/payment_page_headlines.dart';
-import 'package:e_commerce/views/widgets/selected_payment_method_widget.dart';
+import 'package:e_commerce/views/pages/payment_page/widgets/location_selected_widget.dart';
+import 'package:e_commerce/views/pages/payment_page/widgets/payment_item_widget.dart';
+import 'package:e_commerce/views/pages/payment_page/widgets/payment_method_dialog.dart';
+import 'package:e_commerce/views/pages/payment_page/widgets/payment_page_headlines.dart';
+import 'package:e_commerce/views/pages/payment_page/widgets/selected_payment_method_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

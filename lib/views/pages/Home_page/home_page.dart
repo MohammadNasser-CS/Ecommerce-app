@@ -1,8 +1,8 @@
 import 'package:e_commerce/Utils/app_color.dart';
 import 'package:e_commerce/controllers/category_tab_view/category_cubit.dart';
 import 'package:e_commerce/controllers/home_tab_view_cubit/home_cubit.dart';
-import 'package:e_commerce/views/widgets/category_tab_view.dart';
-import 'package:e_commerce/views/widgets/home_tab_view.dart';
+import 'package:e_commerce/views/pages/Home_page/widgets/category_tab_view.dart';
+import 'package:e_commerce/views/pages/Home_page/widgets/home_tab_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

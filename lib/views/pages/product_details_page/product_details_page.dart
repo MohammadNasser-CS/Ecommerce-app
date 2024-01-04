@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/Utils/app_color.dart';
 import 'package:e_commerce/controllers/product_details_cubit/product_details_cubit.dart';
-import 'package:e_commerce/views/widgets/product_details_dialog.dart';
+import 'package:e_commerce/views/pages/product_details_page/widgets/product_details_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

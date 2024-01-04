@@ -1,6 +1,6 @@
 import 'package:e_commerce/Utils/app_color.dart';
 import 'package:e_commerce/controllers/location_page_cubit/location_cubit.dart';
-import 'package:e_commerce/views/widgets/location_item.dart';
+import 'package:e_commerce/views/pages/location_choose_page/widgets/location_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
