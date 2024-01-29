@@ -91,96 +91,92 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: const Padding(
-          padding: EdgeInsetsDirectional.only(start: 8.0),
-          child: CircleAvatar(
-            radius: 30,
-            backgroundImage: AssetImage('assets/images/myphotocopy.jpg'),
+        appBar: AppBar(
+          leading: const Padding(
+            padding: EdgeInsetsDirectional.only(start: 8.0),
+            child: CircleAvatar(
+              radius: 30,
+              backgroundImage: AssetImage('assets/images/myphotocopy.jpg'),
+            ),
           ),
-        ),
-        title: _controller.index == 0
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Hi, Mohammad',
-                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                  Text(
-                    'Let\'s start shopping!',
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                          color: Colors.grey,
-                        ),
-                  )
-                ],
-              )
-            : _controller.index == 1
-                ? const Center(child: Text('My Cart'))
-                : _controller.index == 2
-                    ? const Center(child: Text('My Favoritre'))
-                    : null,
-        actions: [
-          if (_controller.index == 0) ...[
-            IconButton(
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true).pushNamed(
-                  AppRoutes.search,
-                );
-              },
-              icon: const Icon(Icons.search),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.notifications),
-            ),
+          title: _controller.index == 0
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hi, Mohammad',
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                    Text(
+                      'Let\'s start shopping!',
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                            color: Colors.grey,
+                          ),
+                    )
+                  ],
+                )
+              : _controller.index == 1
+                  ? const Center(child: Text('My Cart'))
+                  : _controller.index == 2
+                      ? const Center(child: Text('My Favoritre'))
+                      : null,
+          actions: [
+            if (_controller.index == 0) ...[
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pushNamed(
+                    AppRoutes.search,
+                  );
+                },
+                icon: const Icon(Icons.search),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.notifications),
+              ),
+            ],
+            if (_controller.index == 1)
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRoutes.ordersPage);
+                },
+                icon: const Icon(Icons.shopping_bag),
+                label: const Text('My Orders'),
+              ),
+            if (_controller.index == 2)
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.notifications_on),
+              ),
           ],
-          if (_controller.index == 1)
-            TextButton.icon(
-              onPressed: () {
-                Navigator.of(context).pushNamed(AppRoutes.ordersPage);
-              },
-              icon: const Icon(Icons.shopping_bag),
-              label: const Text('My Orders'),
-            ),
-          if (_controller.index == 2)
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.notifications_on),
-            ),
-        ],
-      ),
-      body: PersistentTabView(
-        context,
-        controller: _controller,
-        screens: _buildScreens(),
-        items: _navBarsItems(),
-        confineInSafeArea: true,
-        backgroundColor: Colors.white, // Default is Colors.white.
-        decoration: NavBarDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          colorBehindNavBar: Colors.white,
         ),
-        itemAnimationProperties: const ItemAnimationProperties(
-          // Navigation Bar's items animation properties.
-          duration: Duration(milliseconds: 200),
-          curve: Curves.ease,
-        ),
-        screenTransitionAnimation: const ScreenTransitionAnimation(
-          // Screen transition animation on change of selected tab.
-          animateTabTransition: true,
-          curve: Curves.ease,
-          duration: Duration(milliseconds: 200),
-        ),
-        navBarStyle:
-            NavBarStyle.style6, // Choose the nav bar style with this property.
-        onItemSelected: (value) => setState(() {
-          _controller.index = value;
-        }),
-        stateManagement: false,
-      ),
-    );
+        body: PersistentTabView(
+          context,
+          controller: _controller,
+          screens: _buildScreens(),
+          items: _navBarsItems(),
+          confineInSafeArea: true,
+          backgroundColor: Colors.white, // Default is Colors.white.
+          decoration: NavBarDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            colorBehindNavBar: Colors.white,
+          ),
+          itemAnimationProperties: const ItemAnimationProperties(
+            // Navigation Bar's items animation properties.
+            duration: Duration(milliseconds: 200),
+            curve: Curves.ease,
+          ),
+          screenTransitionAnimation: const ScreenTransitionAnimation(
+            // Screen transition animation on change of selected tab.
+            animateTabTransition: true,
+            curve: Curves.ease,
+            duration: Duration(milliseconds: 200),
+          ),
+          navBarStyle: NavBarStyle
+              .style6, // Choose the nav bar style with this property.
+          stateManagement: false,
+        ));
   }
 }

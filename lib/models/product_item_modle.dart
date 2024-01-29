@@ -1,3 +1,4 @@
+
 class ProductItemModel {
   final String id;
   final String name;
@@ -41,19 +42,41 @@ class ProductItemModel {
       quantity: quantity ?? this.quantity,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
+
+    result.addAll({'id': id});
+    result.addAll({'name': name});
+    result.addAll({'imgUrl': imgUrl});
+    result.addAll({'description': description});
+    result.addAll({'category': category});
+    result.addAll({'isFavorite': isFavorite});
+    result.addAll({'price': price});
+    result.addAll({'quantity': quantity});
+
+    return result;
+  }
+
+  factory ProductItemModel.fromMap(
+      Map<String, dynamic> map, String documentId) {
+    return ProductItemModel(
+      id: documentId,
+      name: map['name'] ?? '',
+      imgUrl: map['imgUrl'] ?? '',
+      description: map['description'] ?? '',
+      category: map['category'] ?? '',
+      isFavorite: map['isFavorite'] ?? false,
+      price: map['price']?.toDouble() ?? 0.0,
+      quantity: map['quantity']?.toInt() ?? 0,
+    );
+  }
 }
 
 List<ProductItemModel> dummyItems = [
+  
   ProductItemModel(
-    id: '1',
-    name: 'T-shirt',
-    imgUrl:
-        'https://i.pinimg.com/originals/62/98/b0/6298b026a65cf80bcf9dce061e9b79c9.png',
-    category: 'Clothes',
-    price: 10,
-  ),
-  ProductItemModel(
-    id: '2',
+    id: 'Cv6qGlC9y6qXqJnoxiLH',
     name: 'T-shirt',
     imgUrl:
         'https://parspng.com/wp-content/uploads/2022/07/Tshirtpng.parspng.com_.png',
@@ -61,7 +84,7 @@ List<ProductItemModel> dummyItems = [
     price: 10.5,
   ),
   ProductItemModel(
-    id: '3',
+    id: 'RNTUKQnxdPHEJkrSiPWO',
     name: 'T-shirt',
     imgUrl:
         'https://pics.clipartpng.com/Sky_Blue_T_Shirt_PNG_Clip_Art-3103.png',
@@ -69,14 +92,14 @@ List<ProductItemModel> dummyItems = [
     price: 15.5,
   ),
   ProductItemModel(
-    id: '4',
+    id: 'uNqXIk8ESm9yYLJxogCg',
     name: 'T-shirt',
     imgUrl: 'https://pics.clipartpng.com/Red_T_Shirt_PNG_Clip_Art-3105.png',
     category: 'Clothes',
     price: 13,
   ),
   ProductItemModel(
-    id: '5',
+    id: 'FEqb84FdOEYD25cUjLRW',
     name: 'T-shirt',
     imgUrl:
         'https://static.vecteezy.com/system/resources/previews/021/095/976/original/yellow-t-shirt-free-png.png',
@@ -84,7 +107,7 @@ List<ProductItemModel> dummyItems = [
     price: 3.3,
   ),
   ProductItemModel(
-    id: '6',
+    id: 'c69YH8H0i6YOTGLHVDYu',
     name: 'T-shirt',
     imgUrl:
         'https://i.pinimg.com/originals/62/98/b0/6298b026a65cf80bcf9dce061e9b79c9.png',
@@ -92,7 +115,7 @@ List<ProductItemModel> dummyItems = [
     price: 10,
   ),
   ProductItemModel(
-    id: '7',
+    id: 't0anPN2T4H68lT2ucnDj',
     name: 'T-shirt',
     imgUrl:
         'https://parspng.com/wp-content/uploads/2022/07/Tshirtpng.parspng.com_.png',
@@ -100,7 +123,7 @@ List<ProductItemModel> dummyItems = [
     price: 10.5,
   ),
   ProductItemModel(
-    id: '8',
+    id: 'SctXkviKLgoDzHEhb3dZ',
     name: 'T-shirt',
     imgUrl:
         'https://pics.clipartpng.com/Sky_Blue_T_Shirt_PNG_Clip_Art-3103.png',
@@ -108,14 +131,14 @@ List<ProductItemModel> dummyItems = [
     price: 15.5,
   ),
   ProductItemModel(
-    id: '9',
+    id: 'y65AKlziWqDgXQmeQEON',
     name: 'T-shirt',
     imgUrl: 'https://pics.clipartpng.com/Red_T_Shirt_PNG_Clip_Art-3105.png',
     category: 'Clothes',
     price: 13,
   ),
   ProductItemModel(
-    id: '10',
+    id: 'IDLbVSeGgK05AMON313o',
     name: 'T-shirt',
     imgUrl:
         'https://static.vecteezy.com/system/resources/previews/021/095/976/original/yellow-t-shirt-free-png.png',
@@ -123,7 +146,7 @@ List<ProductItemModel> dummyItems = [
     price: 3.3,
   ),
   ProductItemModel(
-    id: '11',
+    id: '23SSeWUPeL4OBvfH5ARH',
     name: 'T-shirt',
     imgUrl:
         'https://i.pinimg.com/originals/62/98/b0/6298b026a65cf80bcf9dce061e9b79c9.png',
@@ -131,7 +154,7 @@ List<ProductItemModel> dummyItems = [
     price: 10,
   ),
   ProductItemModel(
-    id: '12',
+    id: 'CtnSZVQznAVzmJ7yG1gD',
     name: 'T-shirt',
     imgUrl:
         'https://parspng.com/wp-content/uploads/2022/07/Tshirtpng.parspng.com_.png',
@@ -139,7 +162,7 @@ List<ProductItemModel> dummyItems = [
     price: 10.5,
   ),
   ProductItemModel(
-    id: '13',
+    id: 'mcX5xmU2whMyxQvEGqXY',
     name: 'T-shirt',
     imgUrl:
         'https://pics.clipartpng.com/Sky_Blue_T_Shirt_PNG_Clip_Art-3103.png',
@@ -147,14 +170,14 @@ List<ProductItemModel> dummyItems = [
     price: 15.5,
   ),
   ProductItemModel(
-    id: '14',
+    id: 'F7mgHye4Xq9GgKZ9gCaF',
     name: 'T-shirt',
     imgUrl: 'https://pics.clipartpng.com/Red_T_Shirt_PNG_Clip_Art-3105.png',
     category: 'Clothes',
     price: 13,
   ),
   ProductItemModel(
-    id: '15',
+    id: 'AoiDW79JODb0ck9f9Lvv',
     name: 'T-shirt',
     imgUrl:
         'https://static.vecteezy.com/system/resources/previews/021/095/976/original/yellow-t-shirt-free-png.png',

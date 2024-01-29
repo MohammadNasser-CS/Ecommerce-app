@@ -3,7 +3,6 @@ import 'package:e_commerce/Utils/app_color.dart';
 import 'package:e_commerce/controllers/payment_cubit/payment_cubit.dart';
 import 'package:e_commerce/models/payment_method_mode.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PaymentMethodItem extends StatelessWidget {
@@ -13,6 +12,7 @@ class PaymentMethodItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final cubit = BlocProvider.of<PaymentCubit>(context);
     return Padding(
       padding: const EdgeInsetsDirectional.only(bottom: 8.0),
@@ -32,6 +32,7 @@ class PaymentMethodItem extends StatelessWidget {
                   : ClipRRect(
                       borderRadius: BorderRadius.circular(16.0),
                       child: CachedNetworkImage(
+                        width: size.width * 0.2,
                         imageUrl: item!.imageUrl,
                       ),
                     ),
