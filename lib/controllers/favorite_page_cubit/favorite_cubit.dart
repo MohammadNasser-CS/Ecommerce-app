@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_commerce/models/product_item_modle.dart';
-import 'package:meta/meta.dart';
 
 part 'favorite_state.dart';
 

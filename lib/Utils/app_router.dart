@@ -13,6 +13,7 @@ import 'package:e_commerce/views/pages/my_order_page/my_orders_page.dart';
 import 'package:e_commerce/views/pages/payment_page/payment_page.dart';
 import 'package:e_commerce/views/pages/product_details_page/product_details_page.dart';
 import 'package:e_commerce/views/pages/search_page/search_page.dart';
+import 'package:e_commerce/views/pages/signup_page/signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -43,10 +44,10 @@ class AppRouter {
           builder: (_) => BlocProvider(
             create: (context) {
               final cubit = ProductDetailsCubit();
-              cubit.getProductDetails(productItem);
+              cubit.getProductDetails(productItem.id);
               return cubit;
             },
-            child: ProductDetailsPage(),
+            child: const ProductDetailsPage(),
           ),
           settings: settings,
         );
@@ -65,6 +66,14 @@ class AppRouter {
       case AppRoutes.ordersPage:
         return MaterialPageRoute(
           builder: (_) => const MyOrderPage(),
+          settings: settings,
+        );
+      case AppRoutes.register:
+        return MaterialPageRoute(
+          builder: (_) =>  BlocProvider(
+            create: (context) => AuthCubit(),
+            child:const SignupPage(),
+          ),
           settings: settings,
         );
       case AppRoutes.addPaymentCard:

@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_commerce/models/home_category_model.dart';
-import 'package:meta/meta.dart';
 
 part 'category_state.dart';
 

@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/Utils/app_color.dart';
 import 'package:e_commerce/controllers/cart_page_cubit/cart_cubit.dart';
-import 'package:e_commerce/models/my_cart_item_model.dart';
+import 'package:e_commerce/models/cart_item_model.dart';
 import 'package:e_commerce/views/widgets/counter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartItemWidget extends StatelessWidget {
-  final MyCartItemModel cartItem;
+  final CartItemModel cartItem;
   const CartItemWidget({super.key, required this.cartItem});
 
   @override
@@ -31,7 +31,7 @@ class CartItemWidget extends StatelessWidget {
                     child: CachedNetworkImage(
                       fit: BoxFit.cover,
                       width: 150,
-                      imageUrl: cartItem.imgUrl,
+                      imageUrl: cartItem.product.imgUrl,
                       placeholder: (context, url) => const Center(
                           child: CircularProgressIndicator.adaptive()),
                       errorWidget: (context, url, error) =>
@@ -48,7 +48,7 @@ class CartItemWidget extends StatelessWidget {
                         shape: BoxShape.circle),
                     child: IconButton(
                       onPressed: () {},
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.delete_forever_outlined,
                         color: AppColor.red,
                       ),
@@ -74,7 +74,7 @@ class CartItemWidget extends StatelessWidget {
                       } else if (state is CartLoaded) {
                         return CounterWidget(
                           cubit: BlocProvider.of<CartCubit>(context),
-                          value: state.myOrderItems
+                          value: state.cartItems
                               .firstWhere((item) => item.id == cartItem.id)
                               .quantity,
                           item: cartItem,
@@ -96,7 +96,7 @@ class CartItemWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    cartItem.name,
+                    cartItem.product.name,
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -127,14 +127,14 @@ class CartItemWidget extends StatelessWidget {
                 builder: (context, state) {
                   if (state is QuantityCounterLoaded) {
                     return Text(
-                      '\$${(cartItem.price * state.value).toStringAsFixed(2)}',
+                      '\$${(cartItem.product.price * state.value).toStringAsFixed(2)}',
                       style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                     );
                   } else if (state is CartLoaded) {
-                    double price = cartItem.price;
-                    int quantity = state.myOrderItems
+                    double price = cartItem.product.price;
+                    int quantity = state.cartItems
                         .firstWhere(
                           (item) => item.id == cartItem.id,
                         )

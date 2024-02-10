@@ -1,6 +1,5 @@
 part of 'cart_cubit.dart';
 
-@immutable
 sealed class CartState {
   const CartState();
 }
@@ -20,9 +19,9 @@ final class QuantityCounterLoaded extends CartState {
 }
 
 final class CartLoaded extends CartState {
-  final List<MyCartItemModel> myOrderItems;
-  final double subTotal;
-  const CartLoaded({required this.myOrderItems,required this.subTotal});
+  final List<CartItemModel> cartItems;
+  final double subtotal;
+  const CartLoaded({required this.cartItems, required this.subtotal});
 }
 
 final class CartError extends CartState {

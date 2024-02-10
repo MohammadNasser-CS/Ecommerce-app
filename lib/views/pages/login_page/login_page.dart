@@ -17,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   late final GlobalKey<FormState> _formKey;
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
-  String? _email, _password;
+  String? email, password;
   late FocusNode _emailFocusNode, _passwordFocusNode;
   bool visibility = false;
   @override
@@ -108,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                       },
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
-                      onChanged: (value) => _email = value,
+                      onChanged: (value) => email = value,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Pleas enter your email";
@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                     TextFormField(
                       controller: _passwordController,
                       focusNode: _passwordFocusNode,
-                      onChanged: (value) => _password = value,
+                      onChanged: (value) => password = value,
                       obscureText: !visibility,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -273,7 +273,8 @@ class _LoginPageState extends State<LoginPage> {
                                   color: AppColor.grey),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () => Navigator.of(context)
+                              .pushNamed(AppRoutes.register),
                           child: Text(
                             'Register',
                             style: Theme.of(context)

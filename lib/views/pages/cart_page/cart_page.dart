@@ -20,54 +20,68 @@ class CartPage extends StatelessWidget {
           return const Scaffold(
               body: Center(child: CircularProgressIndicator.adaptive()));
         } else if (state is CartLoaded) {
-          return SingleChildScrollView(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-              child: Column(
-                children: [
-                  ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: state.myOrderItems.length,
-                    itemBuilder: (context, index) {
-                      return CartItemWidget(
-                          cartItem: state.myOrderItems[index]);
-                    },
-                  ),
-                  const SizedBox(height: 24.0),
-                  CartPageDialog(title: 'Subtotal', value: state.subTotal),
-                  const SizedBox(height: 12.0),
-                  const CartPageDialog(title: 'Shopping', value: 10),
-                  const SizedBox(height: 12.0),
-                  const DottedDashedLine(
-                      height: 0, width: double.infinity, axis: Axis.horizontal),
-                  const SizedBox(height: 12.0),
-                  CartPageDialog(
-                      title: 'Total Amount', value: state.subTotal + 10),
-                  const SizedBox(height: 32.0),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 55,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context,rootNavigator: true).pushNamed(AppRoutes.paymentPage);
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundColor: AppColor.white),
-                      child: const Text('Check out'),
+          return state.cartItems.isNotEmpty
+              ? SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 8.0),
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: state.cartItems.length,
+                          itemBuilder: (context, index) {
+                            return CartItemWidget(
+                                cartItem: state.cartItems[index]);
+                          },
+                        ),
+                        const SizedBox(height: 24.0),
+                        CartPageDialog(
+                            title: 'Subtotal', value: state.subtotal),
+                        const SizedBox(height: 12.0),
+                        const CartPageDialog(title: 'Shopping', value: 10),
+                        const SizedBox(height: 12.0),
+                        const DottedDashedLine(
+                            height: 0,
+                            width: double.infinity,
+                            axis: Axis.horizontal),
+                        const SizedBox(height: 12.0),
+                        CartPageDialog(
+                            title: 'Total Amount', value: state.subtotal + 10),
+                        const SizedBox(height: 32.0),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 55,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context, rootNavigator: true)
+                                  .pushNamed(AppRoutes.paymentPage);
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(context).primaryColor,
+                                foregroundColor: AppColor.white),
+                            child: const Text('Check out'),
+                          ),
+                        ),
+                        const SizedBox(height: 32.0),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 32.0),
-                ],
-              ),
+                )
+              : const Center(
+                  child: Text('Cart Is Empty'),
+                );
+        } else if (state is CartError) {
+          return Scaffold(
+            body: Center(
+              child: Text(state.message),
             ),
           );
-        } else {
+        }else{
           return const Scaffold(
             body: Center(
-              child: Text('Error'),
+              child: Text('Bad State'),
             ),
           );
         }

@@ -1,6 +1,5 @@
 part of 'category_cubit.dart';
 
-@immutable
 sealed class CategoryState {
   const CategoryState();
 }

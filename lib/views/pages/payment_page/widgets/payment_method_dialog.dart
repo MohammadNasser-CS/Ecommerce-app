@@ -4,7 +4,6 @@ import 'package:e_commerce/controllers/payment_cubit/payment_cubit.dart';
 import 'package:e_commerce/models/payment_method_mode.dart';
 import 'package:e_commerce/views/pages/payment_page/widgets/payment_method_item_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PaymentMethodsDialog extends StatelessWidget {

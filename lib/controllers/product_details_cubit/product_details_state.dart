@@ -1,30 +1,34 @@
 part of 'product_details_cubit.dart';
 
-@immutable
 sealed class ProductDetailsState {
   const ProductDetailsState();
 }
 
 final class ProductDetailsInitial extends ProductDetailsState {}
 final class ProductDetailsLoading extends ProductDetailsState {}
+final class ProductDetailsLoaded extends ProductDetailsState {
+  final ProductItemModel product;
+  ProductDetailsLoaded({required this.product});
+}
+
 final class QuantityCounterLoaded extends ProductDetailsState {
   final int value;
-  final String itemId;
-
-  const QuantityCounterLoaded({
-    required this.value,
-    required this.itemId,
-  });
+  QuantityCounterLoaded({required this.value});
 }
 
-final class ProductDetailsLoaded extends ProductDetailsState {
-  final ProductItemModel productItem;
-  const ProductDetailsLoaded({required this.productItem});
+final class SizeSelected extends ProductDetailsState {
+  final ItemSize size;
+  SizeSelected({required this.size});
 }
+
+final class ProductAddedToCart extends ProductDetailsState {
+  final String productId;
+  ProductAddedToCart({required this.productId});
+}
+
+final class ProductAddingToCart extends ProductDetailsState {}
 
 final class ProductDetailsError extends ProductDetailsState {
   final String message;
-  const ProductDetailsError({
-    required this.message,
-  });
+  ProductDetailsError({required this.message});
 }

@@ -13,13 +13,12 @@ class ProductDetailsPage extends StatefulWidget {
 }
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
-  
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
-      buildWhen: (previous, current) => current is! QuantityCounterLoaded,
+      buildWhen: (previous, current) =>
+          current is ProductDetailsLoading || current is ProductDetailsLoaded || current is ProductDetailsError,
       builder: (context, state) {
         if (state is ProductDetailsLoading) {
           return const Scaffold(
@@ -27,10 +26,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         } else if (state is ProductDetailsLoaded) {
           final cubit = BlocProvider.of<ProductDetailsCubit>(context);
           return Scaffold(
+            extendBodyBehindAppBar: true,
             backgroundColor: Colors.grey[100],
             appBar: AppBar(
-              title: const Text('Detail Product'),
-              backgroundColor: Colors.grey[200],
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              title: const Text('Product Details'),
               leading: IconButton(
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -40,10 +41,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               actions: [
                 IconButton(
                   onPressed: () {
-                    cubit.changeFavorite(state.productItem.id);
+                    cubit.changeFavorite(state.product.id);
                   },
                   icon: Icon(
-                    state.productItem.isFavorite
+                    state.product.isFavorite
                         ? Icons.favorite
                         : Icons.favorite_border,
                     color: AppColor.red,
@@ -64,7 +65,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(24.0),
                         child: CachedNetworkImage(
-                          imageUrl: state.productItem.imgUrl,
+                          imageUrl: state.product.imgUrl,
                           fit: BoxFit.contain,
                           placeholder: (context, url) => const Center(
                               child: CircularProgressIndicator.adaptive()),
@@ -94,7 +95,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                           BlocProvider.value(
                                         value: cubit,
                                         child: ProductDetailsDialog(
-                                            productItemModel: state.productItem),
+                                            productItemModel: state.product),
                                       ),
                                     ),
                                   );

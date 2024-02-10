@@ -1,8 +1,8 @@
-import 'package:e_commerce/Utils/app_routes.dart';
+import 'package:e_commerce/Utils/app_color.dart';
 import 'package:e_commerce/controllers/product_details_cubit/product_details_cubit.dart';
+import 'package:e_commerce/models/cart_item_model.dart';
 import 'package:e_commerce/models/product_item_modle.dart';
 import 'package:e_commerce/views/widgets/counter_widget.dart';
-import 'package:e_commerce/views/widgets/product_size_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readmore/readmore.dart';
@@ -26,6 +26,7 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final cubit = BlocProvider.of<ProductDetailsCubit>(context);
     return Container(
       height: size.height * 0.45,
       decoration: const BoxDecoration(
@@ -51,27 +52,26 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
                 Text(
                   tempProductItem.name,
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.bold,
                       ),
                 ),
                 const Spacer(),
                 BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
                   buildWhen: (previous, current) =>
-                      (current is QuantityCounterLoaded &&
-                          current.itemId == tempProductItem.id) ||
+                      current is QuantityCounterLoaded ||
                       current is ProductDetailsLoaded,
-                  bloc: BlocProvider.of<ProductDetailsCubit>(context),
+                  bloc: cubit,
                   builder: (context, state) {
                     if (state is QuantityCounterLoaded) {
                       return CounterWidget(
-                        cubit: BlocProvider.of<ProductDetailsCubit>(context),
+                        cubit: cubit,
                         value: state.value,
                         item: tempProductItem,
                       );
                     } else if (state is ProductDetailsLoaded) {
                       return CounterWidget(
-                        cubit: BlocProvider.of<ProductDetailsCubit>(context),
-                        value: state.productItem.quantity,
+                        cubit: cubit,
+                        value: state.product.quantity,
                         item: tempProductItem,
                       );
                     } else {
@@ -88,17 +88,50 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
                     fontWeight: FontWeight.w600,
                   ),
             ),
-            const Row(
-              children: [
-                ProductSizeOptions(sizeSympol: 'S'),
-                SizedBox(width: 3.0),
-                ProductSizeOptions(sizeSympol: 'M'),
-                SizedBox(width: 3.0),
-                ProductSizeOptions(sizeSympol: 'L'),
-                SizedBox(width: 3.0),
-                ProductSizeOptions(sizeSympol: 'XL'),
-                SizedBox(width: 3.0),
-              ],
+            BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+              bloc: cubit,
+              buildWhen: (previous, current) =>
+                  current is SizeSelected || current is ProductDetailsLoaded,
+              builder: (context, state) {
+                return Row(
+                  children: ItemSize.values
+                      .map(
+                        (size) => Padding(
+                          padding: const EdgeInsets.only(top: 6.0, right: 8.0),
+                          child: InkWell(
+                            onTap: () {
+                              cubit.selectSize(size);
+                            },
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color:
+                                    state is SizeSelected && state.size == size
+                                        ? Theme.of(context).primaryColor
+                                        : AppColor.grey2,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Text(
+                                  size.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(
+                                        color: state is SizeSelected &&
+                                                state.size == size
+                                            ? AppColor.white
+                                            : AppColor.black,
+                                      ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                );
+              },
             ),
             const SizedBox(height: 12.0),
             Text(
@@ -136,6 +169,8 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
                 Expanded(
                   flex: 2,
                   child: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+                    buildWhen: (previous, current) =>
+                        current is QuantityCounterLoaded,
                     builder: (context, state) {
                       if (state is QuantityCounterLoaded) {
                         return Text(
@@ -147,7 +182,7 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
                           ),
                         );
                       } else if (state is ProductDetailsLoaded) {
-                        final int value = state.productItem.quantity;
+                        final int value = state.product.quantity;
                         return Text(
                           '\$${(tempProductItem.price * value).toStringAsFixed(2)}',
                           style: const TextStyle(
@@ -162,22 +197,68 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
                     },
                   ),
                 ),
-                Expanded(
-                  flex: 2,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pushNamed(AppRoutes.ordersPage)
-                          .then((value) => Navigator.of(context).pop(context));
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepOrange,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        )),
-                    child: const Text('Add To Cart!'),
-                  ),
+                BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+                  bloc: cubit,
+                  buildWhen: (previous, current) =>
+                      current is ProductAddedToCart ||
+                      current is ProductAddingToCart,
+                  builder: (context, state) {
+                    if (state is ProductAddingToCart) {
+                      return Expanded(
+                        flex: 2,
+                        child: ElevatedButton(
+                          onPressed: null,
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              )),
+                          child: const CircularProgressIndicator.adaptive(),
+                        ),
+                      );
+                    } else if (state is ProductAddedToCart) {
+                      return Expanded(
+                        flex: 2,
+                        child: ElevatedButton(
+                          onPressed: null,
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              )),
+                          child: const CircularProgressIndicator.adaptive(),
+                        ),
+                      );
+                    }
+                    return Expanded(
+                      flex: 2,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (cubit.selectedSize != null) {
+                            cubit.addToCart(tempProductItem.id);
+                            Navigator.of(context).pop();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Please select size',
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            )),
+                        child: const Text('Add To Cart!'),
+                      ),
+                    );
+                  },
                 ),
               ],
             )

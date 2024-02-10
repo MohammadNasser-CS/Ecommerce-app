@@ -1,6 +1,5 @@
 part of 'favorite_cubit.dart';
 
-@immutable
 sealed class FavoriteState {
   const FavoriteState();
 }

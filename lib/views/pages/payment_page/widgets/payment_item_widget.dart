@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/Utils/app_color.dart';
-import 'package:e_commerce/models/my_cart_item_model.dart';
+import 'package:e_commerce/models/cart_item_model.dart';
 import 'package:flutter/material.dart';
 
 class PaymentItems extends StatelessWidget {
-  final MyCartItemModel item;
+  final CartItemModel item;
   const PaymentItems({super.key, required this.item});
 
   @override
@@ -21,7 +21,7 @@ class PaymentItems extends StatelessWidget {
               color: AppColor.grey.withOpacity(0.4),
             ),
             child: CachedNetworkImage(
-              imageUrl: item.imgUrl,
+              imageUrl: item.product.imgUrl,
               placeholder: (context, url) =>
                   const Center(child: CircularProgressIndicator.adaptive()),
               errorWidget: (context, url, error) => const Icon(Icons.error),
@@ -33,7 +33,7 @@ class PaymentItems extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.name,
+                  item.product.name,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 Row(
@@ -56,7 +56,7 @@ class PaymentItems extends StatelessWidget {
                       ),
                     if (item.size == null) const SizedBox.shrink(),
                     Text(
-                      '\$${item.price}',
+                      '\$${item.product.price}',
                       style: Theme.of(context).textTheme.titleMedium,
                     )
                   ],

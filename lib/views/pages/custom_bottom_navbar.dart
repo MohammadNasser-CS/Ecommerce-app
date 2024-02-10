@@ -1,4 +1,5 @@
 import 'package:e_commerce/Utils/app_routes.dart';
+import 'package:e_commerce/controllers/auth_cubit/auth_cubit.dart';
 import 'package:e_commerce/controllers/cart_page_cubit/cart_cubit.dart';
 import 'package:e_commerce/controllers/favorite_page_cubit/favorite_cubit.dart';
 import 'package:e_commerce/views/pages/cart_page/cart_page.dart';
@@ -18,14 +19,14 @@ class CustomBottomNavbar extends StatefulWidget {
 
 class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
   late final PersistentTabController _controller;
-  int _currentIndex = 0;
+  int currentIndex = 0;
   @override
   void initState() {
     super.initState();
     _controller = PersistentTabController();
     _controller.addListener(() {
       setState(() {
-        _currentIndex = _controller.index;
+        currentIndex = _controller.index;
       });
     });
   }
@@ -55,7 +56,10 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
         },
         child: const FavoritePage(),
       ),
-      const ProfilePage(),
+      BlocProvider(
+        create: (context) => AuthCubit(),
+        child:const ProfilePage(),
+      ),
     ];
   }
 

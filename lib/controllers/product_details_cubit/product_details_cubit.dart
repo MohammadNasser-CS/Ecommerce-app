@@ -1,49 +1,66 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:e_commerce/models/cart_item_model.dart';
 import 'package:e_commerce/models/product_item_modle.dart';
-import 'package:meta/meta.dart';
+import 'package:e_commerce/services/product_details_services.dart';
 
 part 'product_details_state.dart';
 
 class ProductDetailsCubit extends Cubit<ProductDetailsState> {
   ProductDetailsCubit() : super(ProductDetailsInitial());
-  void getProductDetails(ProductItemModel productItem) {
+  ItemSize? selectedSize;
+  int quantity = 1;
+  final productDetailsServices = ProductDetailsServicesImpl();
+
+  Future<void> getProductDetails(String id) async {
     emit(ProductDetailsLoading());
-    Future.delayed(const Duration(seconds: 1), () {
-      emit(ProductDetailsLoaded(productItem: productItem));
-    });
+    final selectedProduct = await productDetailsServices.getProductDetails(id);
+    emit(ProductDetailsLoaded(product: selectedProduct));
   }
 
-  void increment(String itemId) {
-    final index = dummyItems.indexWhere((item) => item.id == itemId);
-    dummyItems[index] = dummyItems[index].copyWith(
-      quantity: dummyItems[index].quantity + 1,
-    );
-    emit(
-      QuantityCounterLoaded(
-          value: dummyItems[index].quantity, itemId: itemId),
-    );
+  void selectSize(ItemSize size) {
+    selectedSize = size;
+    emit(SizeSelected(size: size));
   }
 
-  void decrement(String itemId) {
-    final index = dummyItems.indexWhere((item) => item.id == itemId);
-    dummyItems[index] = dummyItems[index].copyWith(
-      quantity:
-          dummyItems[index].quantity > 0 ? dummyItems[index].quantity - 1 : 0,
-    );
-    emit(
-      QuantityCounterLoaded(
-          value: dummyItems[index].quantity, itemId: itemId),
-    );
+  Future<void> addToCart(String productId) async {
+    emit(ProductAddingToCart());
+    try {
+      final selectedProduct =
+          await productDetailsServices.getProductDetails(productId);
+      final cartItem = CartItemModel(
+        id: selectedProduct.id,
+        product: selectedProduct,
+        size: selectedSize!,
+        quantity: quantity,
+      );
+      await productDetailsServices.addToCart(cartItem);
+      emit(
+        ProductAddedToCart(productId: productId),
+      );
+    } catch (e) {
+      emit(
+        ProductDetailsError(message: e.toString()),
+      );
+    }
   }
-   
-   void changeFavorite(String itemId) {
+
+  void increment(String productId) {
+    quantity++;
+    emit(QuantityCounterLoaded(value: quantity));
+  }
+
+  void decrement(String productId) {
+    quantity--;
+    emit(QuantityCounterLoaded(value: quantity));
+  }
+
+  void changeFavorite(String itemId) {
     final index = dummyItems.indexWhere((item) => item.id == itemId);
     dummyItems[index] = dummyItems[index].copyWith(
       isFavorite: !dummyItems[index].isFavorite,
     );
     emit(
-      ProductDetailsLoaded(
-          productItem:dummyItems[index]),
+      ProductDetailsLoaded(product: dummyItems[index]),
     );
   }
 }
