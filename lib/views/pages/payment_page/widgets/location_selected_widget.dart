@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/Utils/app_color.dart';
-import 'package:e_commerce/models/address_choose_item_model.dart';
+import 'package:e_commerce/models/location_model.dart';
 import 'package:flutter/material.dart';
 
 class SelectedLocationItem extends StatelessWidget {
-  final AddressChooseItemModel item;
+  final LocationModel item;
   const SelectedLocationItem({super.key, required this.item});
 
   @override
@@ -42,7 +42,7 @@ class SelectedLocationItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        item.description,
+                        item.cityName,
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
                               color: AppColor.grey,
                             ),

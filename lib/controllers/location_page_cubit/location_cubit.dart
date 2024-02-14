@@ -1,30 +1,41 @@
+import 'package:e_commerce/services/cart_services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:e_commerce/models/address_choose_item_model.dart';
+import 'package:e_commerce/models/location_model.dart';
 
 part 'location_state.dart';
 
 class LocationCubit extends Cubit<LocationState> {
   LocationCubit() : super(LocationInitial());
-  void getLocationData() {
+  final cartServices = CartServicesImpl();
+  Future<void> getLocations() async {
     emit(LocationLoading());
-    Future.delayed(const Duration(seconds: 1), () {
-      emit(LocationLoaded(myAddressItems: dummyAddresses));
-    });
+    try {
+      final locations = await cartServices.getLocations();
+      emit(LocationLoaded(
+        locations: locations,
+      ));
+    } catch (e) {
+      emit(
+        LocationError(message: e.toString()),
+      );
+    }
   }
 
-  void changeSelectedIndex(String itemId) {
-    final index = dummyAddresses.indexWhere((item) => item.id == itemId);
-    for (int i = 0; i < dummyAddresses.length; i++) {
-      if (i == index) {
-        dummyAddresses[i] = dummyAddresses[i].copyWith(
-          isSelected: true,
-        );
-      } else {
-        dummyAddresses[i] = dummyAddresses[i].copyWith(
-          isSelected: false,
-        );
+  Future<void> setLocationItem(LocationModel locationModel) async {
+    try {
+      emit(LocationLoading());
+      final selectedLocations = await cartServices.getLocations(hasQuery: true);
+      if (selectedLocations.isNotEmpty) {
+        await cartServices.unSetLocationItem(selectedLocations.first);
       }
+      await cartServices.setLocationItem(locationModel);
+      final locations = await cartServices.getLocations();
+      // emit(LocationSet());
+      emit(LocationLoaded(locations: locations));
+    } catch (e) {
+      emit(
+        LocationError(message: e.toString()),
+      );
     }
-    emit(LocationIndexChange(myAddressItems: dummyAddresses));
   }
 }

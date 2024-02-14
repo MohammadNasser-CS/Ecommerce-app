@@ -1,7 +1,7 @@
 import 'package:e_commerce/Utils/app_color.dart';
 import 'package:e_commerce/Utils/app_routes.dart';
 import 'package:e_commerce/controllers/payment_cubit/payment_cubit.dart';
-import 'package:e_commerce/models/address_choose_item_model.dart';
+import 'package:e_commerce/models/location_model.dart';
 import 'package:e_commerce/models/payment_method_mode.dart';
 import 'package:e_commerce/views/pages/payment_page/widgets/location_selected_widget.dart';
 import 'package:e_commerce/views/pages/payment_page/widgets/payment_item_widget.dart';
@@ -17,7 +17,7 @@ class PaymentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<PaymentCubit>(context);
-  
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Payment'),
@@ -33,6 +33,9 @@ class PaymentPage extends StatelessWidget {
           if (state is PaymentLoading) {
             return const Center(child: CircularProgressIndicator.adaptive());
           } else if (state is PaymentLoaded) {
+            final location = state.location;
+            final cartItems = state.cartItems;
+            final total = state.total;
             return SingleChildScrollView(
               child: Padding(
                 padding:
@@ -40,22 +43,20 @@ class PaymentPage extends StatelessWidget {
                 child: Column(
                   children: [
                     PaymentHeadLines(
-                      title: 'Addres',
-                      onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(AppRoutes.locationPage)
-                            .then((value) => cubit
-                                .getLocation(value as AddressChooseItemModel));
+                      title: 'Address',
+                      onTap: () async {
+                        await Navigator.of(context)
+                            .pushNamed(AppRoutes.locationPage);
+                        await cubit.getPaymentPageData();
                       },
                     ),
                     const SizedBox(height: 8.0),
                     state.location == null
                         ? InkWell(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .pushNamed(AppRoutes.locationPage)
-                                  .then((value) => cubit.getLocation(
-                                      value as AddressChooseItemModel));
+                            onTap: () async {
+                              await Navigator.of(context)
+                                  .pushNamed(AppRoutes.locationPage);
+                              await cubit.getPaymentPageData();
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -67,25 +68,24 @@ class PaymentPage extends StatelessWidget {
                               child: const Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Center(
-                                  child: Text('Add Addres'),
+                                  child: Text('Add Address'),
                                 ),
                               ),
                             ),
                           )
-                        : SelectedLocationItem(
-                            item: state.location as AddressChooseItemModel),
+                        : SelectedLocationItem(item: location as LocationModel),
                     const SizedBox(height: 16.0),
                     PaymentHeadLines(
                       title: 'Products',
-                      productsNumber: state.myOrderItems.length,
+                      productsNumber: cartItems.length,
                     ),
                     const SizedBox(height: 8.0),
                     ListView.builder(
-                      itemCount: state.myOrderItems.length,
+                      itemCount: cartItems.length,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                        final item = state.myOrderItems[index];
+                        final item = cartItems[index];
                         return PaymentItems(item: item);
                       },
                     ),
@@ -100,8 +100,7 @@ class PaymentPage extends StatelessWidget {
                           value: cubit,
                           child: const PaymentMethodsDialog(),
                         ),
-                      ).then((value) =>
-                          cubit.getPaymentMethod(value )),
+                      ).then((value) => cubit.getPaymentMethod(value)),
                       child: state.paymentMethod == null
                           ? Container(
                               decoration: BoxDecoration(
@@ -132,7 +131,7 @@ class PaymentPage extends StatelessWidget {
                                   ),
                         ),
                         Text(
-                          '\$${state.total}',
+                          '\$$total',
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                       ],
@@ -153,6 +152,10 @@ class PaymentPage extends StatelessWidget {
                   ],
                 ),
               ),
+            );
+          } else if (state is PaymentError) {
+            return Center(
+              child: Text(state.message),
             );
           } else {
             return const SizedBox.shrink();

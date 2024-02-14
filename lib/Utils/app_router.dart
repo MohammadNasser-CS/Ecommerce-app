@@ -7,7 +7,7 @@ import 'package:e_commerce/controllers/search_page_cubit/search_cubit.dart';
 import 'package:e_commerce/models/product_item_modle.dart';
 import 'package:e_commerce/views/pages/add_payment_method_page/add_payment_method.dart';
 import 'package:e_commerce/views/pages/custom_bottom_navbar.dart';
-import 'package:e_commerce/views/pages/location_choose_page/location_chooes_page.dart';
+import 'package:e_commerce/views/pages/location_page/location_page.dart';
 import 'package:e_commerce/views/pages/login_page/login_page.dart';
 import 'package:e_commerce/views/pages/my_order_page/my_orders_page.dart';
 import 'package:e_commerce/views/pages/payment_page/payment_page.dart';
@@ -70,9 +70,9 @@ class AppRouter {
         );
       case AppRoutes.register:
         return MaterialPageRoute(
-          builder: (_) =>  BlocProvider(
+          builder: (_) => BlocProvider(
             create: (context) => AuthCubit(),
-            child:const SignupPage(),
+            child: const SignupPage(),
           ),
           settings: settings,
         );
@@ -86,7 +86,7 @@ class AppRouter {
           builder: (_) => BlocProvider(
             create: (context) {
               final cubit = PaymentCubit();
-              cubit.getPaymentData();
+              cubit.getPaymentPageData();
               return cubit;
             },
             child: const PaymentPage(),
@@ -98,7 +98,7 @@ class AppRouter {
           builder: (_) => BlocProvider(
             create: (context) {
               final cubit = LocationCubit();
-              cubit.getLocationData();
+              cubit.getLocations();
               return cubit;
             },
             child: const LocationChoosePage(),
